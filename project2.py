@@ -44,11 +44,11 @@ BOOKS = [
 
 
 @app.get("/books", status_code=status.HTTP_200_OK)
-async def read_all_books():
+async def readAllBooks():
     return BOOKS
 
 @app.get("/books/{book_id}", status_code=status.HTTP_200_OK)
-async def read_book(book_id: int = Path(gt=0)):
+async def readBook(book_id: int = Path(gt=0)):
     for book in BOOKS:
         if book.id == book_id:
             return book
@@ -56,7 +56,7 @@ async def read_book(book_id: int = Path(gt=0)):
 
 
 @app.get("/books/", status_code=status.HTTP_200_OK)
-async def read_book_by_rating(book_rating: int = Query(gt=0, lt=6)):
+async def readBookByRating(book_rating: int = Query(gt=0, lt=6)):
     books_to_return = []
     for book in BOOKS:
         if book.rating == book_rating:
@@ -65,7 +65,7 @@ async def read_book_by_rating(book_rating: int = Query(gt=0, lt=6)):
 
 
 @app.get("/books/publish/", status_code=status.HTTP_200_OK)
-async def read_books_by_publish_date(published_date: int = Query(gt=1999, lt=2031)):
+async def readBooksByPublishDate(published_date: int = Query(gt=1999, lt=2031)):
     books_to_return = []
     for book in BOOKS:
         if book.published_date == published_date:
@@ -74,16 +74,16 @@ async def read_books_by_publish_date(published_date: int = Query(gt=1999, lt=203
 
 
 @app.post("/create-book", status_code=status.HTTP_201_CREATED)
-async def create_book(book_request: BookRequest):
+async def createBook(book_request: BookRequest):
     new_book = Book(**book_request.model_dump())
-    BOOKS.append(find_book_id(new_book))
+    BOOKS.append(findBookId(new_book))
 
-def find_book_id(book: Book):
+def findBookId(book: Book):
     book.id = 1 if len(BOOKS) == 0 else BOOKS[-1].id + 1
     return book
 
 @app.put("/books/update_book", status_code=status.HTTP_204_NO_CONTENT)
-async def update_book(book: BookRequest):
+async def updateBook(book: BookRequest):
     book_changed = False
     for i in range(len(BOOKS)):
         if BOOKS[i].id == book.id:
@@ -93,12 +93,31 @@ async def update_book(book: BookRequest):
         raise HTTPException(status_code=404, detail='Item not found')
 
 @app.delete("/books/{book_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_book(book_id: int = Path(gt=0)):
+async def deleteBook(book_id: int = Path(gt=0)):
     book_changed = False
     for i in range(len(BOOKS)):
         if BOOKS[i].id == book_id:
             BOOKS.pop(i) 
             book_changed = True
             break 
+    if not book_changed:
+        raise HTTPException(status_code=404, detail='Item not found')
+    
+
+@app.put("/books/update_book_title/{book_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def updateBookTitle(book_id: int = Path(gt=0), book: BookRequest = Body()):
+    book_changed = False
+
+    for i in range(len(BOOKS)):
+        if BOOKS[i].id == book_id:
+            BOOKS[i].title = book.title
+            BOOKS[i].author = book.author
+            BOOKS[i].description = book.description
+            BOOKS[i].rating = book.rating
+            BOOKS[i].published_date = book.published_date
+
+            book_changed = True
+            break
+
     if not book_changed:
         raise HTTPException(status_code=404, detail='Item not found')
