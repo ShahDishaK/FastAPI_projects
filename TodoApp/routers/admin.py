@@ -1,11 +1,12 @@
 from typing_extensions import Annotated
 from fastapi import APIRouter,Depends,HTTPException,Path
 from starlette import status 
-from models import Todos
-from .auth import get_current_user
-from database import dp_dependency
-
-
+from TodoApp.models import Todos
+# from models import Todos
+from TodoApp.routers.auth import get_current_user
+from TodoApp.database import dp_dependency
+# from database import dp_dependency
+    
 router=APIRouter(
     prefix='/admin',
     tags=['admin']

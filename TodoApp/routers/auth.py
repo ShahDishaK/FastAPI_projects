@@ -1,13 +1,15 @@
 from typing_extensions import Annotated
 from fastapi import Depends, APIRouter, HTTPException
 from pydantic import BaseModel
-from models import Users
+# from models import Users
 from passlib.context import CryptContext
-from database import dp_dependency
+# from database import dp_dependency
+from TodoApp.database import dp_dependency
 from starlette import status
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import jwt, JWTError
 from datetime import timedelta, datetime, timezone
+from TodoApp.models import Users
 
 router = APIRouter(
     prefix='/auth',
@@ -90,3 +92,7 @@ async def login_for_access_token(
         raise HTTPException(status_code=401, detail='Could not validate user.')
     token = create_access_token(user.username, user.id, user.role, timedelta(minutes=20))
     return {'access_token': token, 'token_type': 'bearer'}
+
+
+
+
