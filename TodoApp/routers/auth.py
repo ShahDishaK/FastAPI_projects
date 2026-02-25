@@ -1,15 +1,18 @@
 from typing_extensions import Annotated
-from fastapi import Depends, APIRouter, HTTPException
+from fastapi import Depends, APIRouter, HTTPException,Request 
 from pydantic import BaseModel
-# from models import Users
+from models import Users
 from passlib.context import CryptContext
-# from database import dp_dependency
-from TodoApp.database import dp_dependency
+from database import dp_dependency
+# from TodoApp.database import dp_dependency
 from starlette import status
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import jwt, JWTError
 from datetime import timedelta, datetime, timezone
-from TodoApp.models import Users
+# from TodoApp.models import Users
+from fastapi.templating import Jinja2Templates
+from core.templates import templates
+import os  
 
 router = APIRouter(
     prefix='/auth',
@@ -23,6 +26,19 @@ bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # ✅ ONLY THIS
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="/auth/token")
+
+
+# templates = Jinja2Templates(directory="/TodoApp/templates")
+
+### pages  ###
+@router.get("/login-page")
+def render_login_page(request:Request):
+    return templates.TemplateResponse("login.html",{"request":request})
+
+@router.get("/register-page")
+def render_register_page(request: Request):
+    return templates.TemplateResponse("register.html", {"request": request})
+
 
 
 class CreateUserRequest(BaseModel):

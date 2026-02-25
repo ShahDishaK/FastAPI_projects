@@ -1,17 +1,21 @@
 from fastapi import Depends, APIRouter, HTTPException, Path
-# from database import dp_dependency
-from TodoApp.database import dp_dependency
+from database import dp_dependency
+# from TodoApp.database import dp_dependency
 from typing_extensions import Annotated
 from sqlalchemy.orm import Session
-from TodoApp.models import Todos
-# from models import Todos
+# from TodoApp.models import Todos
+from models import Todos
 from starlette import status
 from pydantic import BaseModel, Field
-from TodoApp.routers.auth import get_current_user
+# from TodoApp.routers.auth import get_current_user
 from typing import List
+from .auth import get_current_user
 
 
-router=APIRouter()
+router=APIRouter(
+    prefix="/todos",
+    tags=['todos']
+)
 class TodoResponse(BaseModel):
     id: int
     title: str
