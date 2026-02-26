@@ -1,9 +1,11 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request,status
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import os
 from routers import auth, todos, admin
 from core.templates import templates
+from fastapi.responses import RedirectResponse
+
 
 app = FastAPI()
 
@@ -23,4 +25,4 @@ app.include_router(admin.router)
 
 @app.get("/")
 def test(request: Request):
-    return templates.TemplateResponse("home.html", {"request": request})
+    return RedirectResponse(url="/todos/todo-page", status_code=status.HTTP_302_FOUND)
