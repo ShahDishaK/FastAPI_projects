@@ -24,7 +24,7 @@ def test_read_one_authentication(test_todo):
 
 
 def test_read_one_authentication_not_found():
-    response=client.get("todo/999")
+    response=client.get("/todo/999")
     assert response.status_code==404
     assert response.json()=={'detail':"Todo not found"}
 
@@ -60,7 +60,7 @@ def test_update_todo(test_todo):
 
 
     response=client.put('/todo/1',json=request_data)
-    assert response.status_code==204
+    assert response.status_code==200
     db=TestingSessionLocal()
     model=db.query(Todos).filter(Todos.id==1).first()
     assert model.title=="Change title of the todo already saved"

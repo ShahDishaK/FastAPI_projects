@@ -1,9 +1,9 @@
 from typing_extensions import Annotated
 from fastapi import Depends, APIRouter, HTTPException
 from pydantic import BaseModel
-# from models import Users
+from TodoApp.models import Users
 from passlib.context import CryptContext
-# from database import dp_dependency
+from sqlalchemy.orm import Session
 from TodoApp.database import dp_dependency
 from starlette import status
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer

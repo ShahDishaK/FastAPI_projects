@@ -21,15 +21,18 @@ def test_return_user(test_user):
 
 
 def test_change_password_success(test_user):
-    response=client.put("/users/change_password/",json={"hashed_password":"admin","new_password":"admin2"})
-
-    assert response.status_code==status.HTTP_204_NO_CONTENT
+    response = client.put(
+        "/users/change_password",
+        json={"current_password":"admin","new_password":"admin2"}
+    )
+    assert response.status_code == status.HTTP_204_NO_CONTENT
 
 
 def test_change_password_invalid_current_password(test_user):
-    response=client.put("/users/change_password/",json={"hashed_password":"admin3","new_password":"admin2"})
+    response = client.put(
+        "/users/change_password",
+        json={"current_password":"admin3","new_password":"admin2"}
+    )
 
-    assert response.status_code==status.HTTP_401_UNAUTHORIZED
-    assert response.json()=={'detail':"Password not changed"}
-
-
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+    assert response.json() == {'detail':"Password not changed"}

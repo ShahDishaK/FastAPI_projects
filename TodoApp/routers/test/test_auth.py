@@ -11,19 +11,18 @@ app.dependency_overrides[get_db]=override_get_db
 
 
 def test_authenticate_user(test_user):
-    db=TestingSessionLocal()
+    db = TestingSessionLocal()
 
-    assert authenticate_user==authenticate_user(test_user.username,'admin',db)
-    assert authenticate_user.username==test_user.username
+    user = authenticate_user(test_user.username, 'admin', db)
 
+    assert user is not False
+    assert user.username == 'admin'
 
-    non_existent_user=authenticate_user("wrongusername",'admin',db)
-
+    non_existent_user = authenticate_user("wrongusername", 'admin', db)
     assert non_existent_user is False
 
-    wrong_password_user=authenticate_user(test_user.username,'admin123',db)
-
-    assert wrong_password_user is False 
+    wrong_password_user = authenticate_user(test_user.username, 'admin123', db)
+    assert wrong_password_user is False
 
 
 def test_create_access_token():

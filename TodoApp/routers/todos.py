@@ -1,5 +1,4 @@
 from fastapi import Depends, APIRouter, HTTPException, Path
-# from database import dp_dependency
 from TodoApp.database import dp_dependency
 from typing_extensions import Annotated
 from sqlalchemy.orm import Session
